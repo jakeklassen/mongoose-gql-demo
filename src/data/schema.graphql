@@ -1,11 +1,111 @@
-input _idOperatorsFilterFindManyUserInput {
-  gt: MongoID
-  gte: MongoID
-  lt: MongoID
-  lte: MongoID
-  ne: MongoID
-  in: [MongoID]
-  nin: [MongoID]
+type Query {
+  userById(_id: MongoID!): User
+  userByIds(_ids: [MongoID]!, limit: Int = 1000, sort: SortFindByIdsUserInput): [User!]
+  userOne(
+    """Filter by fields"""
+    filter: FilterFindOneUserInput
+    skip: Int
+    sort: SortFindOneUserInput
+  ): User
+  userMany(
+    """Filter by fields"""
+    filter: FilterFindManyUserInput
+    skip: Int
+    limit: Int = 1000
+    sort: SortFindManyUserInput
+  ): [User!]
+  userCount(
+    """Filter by fields"""
+    filter: FilterUserInput
+  ): Int
+  userConnection(
+    """Forward pagination argument for returning at most first edges"""
+    first: Int
+
+    """Forward pagination argument for returning at most first edges"""
+    after: String
+
+    """Backward pagination argument for returning at most last edges"""
+    last: Int
+
+    """Backward pagination argument for returning at most last edges"""
+    before: String
+
+    """Filter by fields"""
+    filter: FilterFindManyUserInput
+
+    """Sort argument for data ordering"""
+    sort: SortConnectionUserEnum = _ID_DESC
+  ): UserConnection
+  userPagination(
+    """Page number for displaying"""
+    page: Int
+
+    """"""
+    perPage: Int = 20
+
+    """Filter by fields"""
+    filter: FilterFindManyUserInput
+    sort: SortFindManyUserInput
+  ): UserPagination
+}
+
+type User {
+  name: String!
+  email: String!
+  _id: MongoID!
+  updatedAt: Date
+  createdAt: Date
+}
+
+"""
+The `ID` scalar type represents a unique MongoDB identifier in collection. MongoDB by default use 12-byte ObjectId value (https://docs.mongodb.com/manual/reference/bson-types/#objectid). But MongoDB also may accepts string or integer as correct values for _id field.
+"""
+scalar MongoID
+
+scalar Date
+
+enum SortFindByIdsUserInput {
+  _ID_ASC
+  _ID_DESC
+  EMAIL_ASC
+  EMAIL_DESC
+  CREATEDAT_ASC
+  CREATEDAT_DESC
+  CREATEDAT__UPDATEDAT_ASC
+  CREATEDAT__UPDATEDAT_DESC
+}
+
+""""""
+input FilterFindOneUserInput {
+  name: String
+  email: String
+  _id: MongoID
+  updatedAt: Date
+  createdAt: Date
+  _ids: [MongoID]
+
+  """List of *indexed* fields that can be filtered via operators."""
+  _operators: OperatorsFilterFindOneUserInput
+  OR: [FilterFindOneUserInput!]
+  AND: [FilterFindOneUserInput!]
+}
+
+"""For performance reason this type contains only *indexed* fields."""
+input OperatorsFilterFindOneUserInput {
+  email: EmailOperatorsFilterFindOneUserInput
+  _id: _idOperatorsFilterFindOneUserInput
+  createdAt: CreatedAtOperatorsFilterFindOneUserInput
+}
+
+input EmailOperatorsFilterFindOneUserInput {
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  ne: String
+  in: [String]
+  nin: [String]
 }
 
 input _idOperatorsFilterFindOneUserInput {
@@ -18,47 +118,60 @@ input _idOperatorsFilterFindOneUserInput {
   nin: [MongoID]
 }
 
-input _idOperatorsFilterRemoveManyUserInput {
-  gt: MongoID
-  gte: MongoID
-  lt: MongoID
-  lte: MongoID
-  ne: MongoID
-  in: [MongoID]
-  nin: [MongoID]
+input CreatedAtOperatorsFilterFindOneUserInput {
+  gt: Date
+  gte: Date
+  lt: Date
+  lte: Date
+  ne: Date
+  in: [Date]
+  nin: [Date]
 }
 
-input _idOperatorsFilterRemoveOneUserInput {
-  gt: MongoID
-  gte: MongoID
-  lt: MongoID
-  lte: MongoID
-  ne: MongoID
-  in: [MongoID]
-  nin: [MongoID]
+enum SortFindOneUserInput {
+  _ID_ASC
+  _ID_DESC
+  EMAIL_ASC
+  EMAIL_DESC
+  CREATEDAT_ASC
+  CREATEDAT_DESC
+  CREATEDAT__UPDATEDAT_ASC
+  CREATEDAT__UPDATEDAT_DESC
 }
 
-input _idOperatorsFilterUpdateManyUserInput {
-  gt: MongoID
-  gte: MongoID
-  lt: MongoID
-  lte: MongoID
-  ne: MongoID
-  in: [MongoID]
-  nin: [MongoID]
+""""""
+input FilterFindManyUserInput {
+  name: String
+  email: String
+  _id: MongoID
+  updatedAt: Date
+  createdAt: Date
+  _ids: [MongoID]
+
+  """List of *indexed* fields that can be filtered via operators."""
+  _operators: OperatorsFilterFindManyUserInput
+  OR: [FilterFindManyUserInput!]
+  AND: [FilterFindManyUserInput!]
 }
 
-input _idOperatorsFilterUpdateOneUserInput {
-  gt: MongoID
-  gte: MongoID
-  lt: MongoID
-  lte: MongoID
-  ne: MongoID
-  in: [MongoID]
-  nin: [MongoID]
+"""For performance reason this type contains only *indexed* fields."""
+input OperatorsFilterFindManyUserInput {
+  email: EmailOperatorsFilterFindManyUserInput
+  _id: _idOperatorsFilterFindManyUserInput
+  createdAt: CreatedAtOperatorsFilterFindManyUserInput
 }
 
-input _idOperatorsFilterUserInput {
+input EmailOperatorsFilterFindManyUserInput {
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  ne: String
+  in: [String]
+  nin: [String]
+}
+
+input _idOperatorsFilterFindManyUserInput {
   gt: MongoID
   gte: MongoID
   lt: MongoID
@@ -78,169 +191,37 @@ input CreatedAtOperatorsFilterFindManyUserInput {
   nin: [Date]
 }
 
-input CreatedAtOperatorsFilterFindOneUserInput {
-  gt: Date
-  gte: Date
-  lt: Date
-  lte: Date
-  ne: Date
-  in: [Date]
-  nin: [Date]
+enum SortFindManyUserInput {
+  _ID_ASC
+  _ID_DESC
+  EMAIL_ASC
+  EMAIL_DESC
+  CREATEDAT_ASC
+  CREATEDAT_DESC
+  CREATEDAT__UPDATEDAT_ASC
+  CREATEDAT__UPDATEDAT_DESC
 }
 
-input CreatedAtOperatorsFilterRemoveManyUserInput {
-  gt: Date
-  gte: Date
-  lt: Date
-  lte: Date
-  ne: Date
-  in: [Date]
-  nin: [Date]
-}
-
-input CreatedAtOperatorsFilterRemoveOneUserInput {
-  gt: Date
-  gte: Date
-  lt: Date
-  lte: Date
-  ne: Date
-  in: [Date]
-  nin: [Date]
-}
-
-input CreatedAtOperatorsFilterUpdateManyUserInput {
-  gt: Date
-  gte: Date
-  lt: Date
-  lte: Date
-  ne: Date
-  in: [Date]
-  nin: [Date]
-}
-
-input CreatedAtOperatorsFilterUpdateOneUserInput {
-  gt: Date
-  gte: Date
-  lt: Date
-  lte: Date
-  ne: Date
-  in: [Date]
-  nin: [Date]
-}
-
-input CreatedAtOperatorsFilterUserInput {
-  gt: Date
-  gte: Date
-  lt: Date
-  lte: Date
-  ne: Date
-  in: [Date]
-  nin: [Date]
-}
-
-input CreateManyUserInput {
-  name: String!
-  email: String!
+""""""
+input FilterUserInput {
+  name: String
+  email: String
+  _id: MongoID
   updatedAt: Date
   createdAt: Date
+  _ids: [MongoID]
+
+  """List of *indexed* fields that can be filtered via operators."""
+  _operators: OperatorsFilterUserInput
+  OR: [FilterUserInput!]
+  AND: [FilterUserInput!]
 }
 
-type CreateManyUserPayload {
-  """
-  Created document ID
-  """
-  recordIds: [MongoID]!
-
-  """
-  Created documents
-  """
-  records: [User]!
-
-  """
-  Count of all documents created
-  """
-  createCount: Int!
-}
-
-input CreateOneUserInput {
-  name: String!
-  email: String!
-  updatedAt: Date
-  createdAt: Date
-}
-
-type CreateOneUserPayload {
-  """
-  Created document ID
-  """
-  recordId: MongoID
-
-  """
-  Created document
-  """
-  record: User
-}
-
-scalar Date
-
-input EmailOperatorsFilterFindManyUserInput {
-  gt: String
-  gte: String
-  lt: String
-  lte: String
-  ne: String
-  in: [String]
-  nin: [String]
-}
-
-input EmailOperatorsFilterFindOneUserInput {
-  gt: String
-  gte: String
-  lt: String
-  lte: String
-  ne: String
-  in: [String]
-  nin: [String]
-}
-
-input EmailOperatorsFilterRemoveManyUserInput {
-  gt: String
-  gte: String
-  lt: String
-  lte: String
-  ne: String
-  in: [String]
-  nin: [String]
-}
-
-input EmailOperatorsFilterRemoveOneUserInput {
-  gt: String
-  gte: String
-  lt: String
-  lte: String
-  ne: String
-  in: [String]
-  nin: [String]
-}
-
-input EmailOperatorsFilterUpdateManyUserInput {
-  gt: String
-  gte: String
-  lt: String
-  lte: String
-  ne: String
-  in: [String]
-  nin: [String]
-}
-
-input EmailOperatorsFilterUpdateOneUserInput {
-  gt: String
-  gte: String
-  lt: String
-  lte: String
-  ne: String
-  in: [String]
-  nin: [String]
+"""For performance reason this type contains only *indexed* fields."""
+input OperatorsFilterUserInput {
+  email: EmailOperatorsFilterUserInput
+  _id: _idOperatorsFilterUserInput
+  createdAt: CreatedAtOperatorsFilterUserInput
 }
 
 input EmailOperatorsFilterUserInput {
@@ -253,125 +234,89 @@ input EmailOperatorsFilterUserInput {
   nin: [String]
 }
 
-input FilterFindManyUserInput {
-  name: String
-  email: String
-  _id: MongoID
-  updatedAt: Date
-  createdAt: Date
-  _ids: [MongoID]
-
-  """
-  List of *indexed* fields that can be filtered via operators.
-  """
-  _operators: OperatorsFilterFindManyUserInput
-  OR: [FilterFindManyUserInput!]
-  AND: [FilterFindManyUserInput!]
+input _idOperatorsFilterUserInput {
+  gt: MongoID
+  gte: MongoID
+  lt: MongoID
+  lte: MongoID
+  ne: MongoID
+  in: [MongoID]
+  nin: [MongoID]
 }
 
-input FilterFindOneUserInput {
-  name: String
-  email: String
-  _id: MongoID
-  updatedAt: Date
-  createdAt: Date
-  _ids: [MongoID]
-
-  """
-  List of *indexed* fields that can be filtered via operators.
-  """
-  _operators: OperatorsFilterFindOneUserInput
-  OR: [FilterFindOneUserInput!]
-  AND: [FilterFindOneUserInput!]
+input CreatedAtOperatorsFilterUserInput {
+  gt: Date
+  gte: Date
+  lt: Date
+  lte: Date
+  ne: Date
+  in: [Date]
+  nin: [Date]
 }
 
-input FilterRemoveManyUserInput {
-  name: String
-  email: String
-  _id: MongoID
-  updatedAt: Date
-  createdAt: Date
-  _ids: [MongoID]
+"""A connection to a list of items."""
+type UserConnection {
+  """Total object count."""
+  count: Int!
 
-  """
-  List of *indexed* fields that can be filtered via operators.
-  """
-  _operators: OperatorsFilterRemoveManyUserInput
-  OR: [FilterRemoveManyUserInput!]
-  AND: [FilterRemoveManyUserInput!]
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """Information to aid in pagination."""
+  edges: [UserEdge!]!
 }
 
-input FilterRemoveOneUserInput {
-  name: String
-  email: String
-  _id: MongoID
-  updatedAt: Date
-  createdAt: Date
-  _ids: [MongoID]
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
 
-  """
-  List of *indexed* fields that can be filtered via operators.
-  """
-  _operators: OperatorsFilterRemoveOneUserInput
-  OR: [FilterRemoveOneUserInput!]
-  AND: [FilterRemoveOneUserInput!]
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
 }
 
-input FilterUpdateManyUserInput {
-  name: String
-  email: String
-  _id: MongoID
-  updatedAt: Date
-  createdAt: Date
-  _ids: [MongoID]
+"""An edge in a connection."""
+type UserEdge {
+  """The item at the end of the edge"""
+  node: User!
 
-  """
-  List of *indexed* fields that can be filtered via operators.
-  """
-  _operators: OperatorsFilterUpdateManyUserInput
-  OR: [FilterUpdateManyUserInput!]
-  AND: [FilterUpdateManyUserInput!]
+  """A cursor for use in pagination"""
+  cursor: String!
 }
 
-input FilterUpdateOneUserInput {
-  name: String
-  email: String
-  _id: MongoID
-  updatedAt: Date
-  createdAt: Date
-  _ids: [MongoID]
-
-  """
-  List of *indexed* fields that can be filtered via operators.
-  """
-  _operators: OperatorsFilterUpdateOneUserInput
-  OR: [FilterUpdateOneUserInput!]
-  AND: [FilterUpdateOneUserInput!]
+enum SortConnectionUserEnum {
+  _ID_DESC
+  _ID_ASC
+  EMAIL_DESC
+  EMAIL_ASC
 }
 
-input FilterUserInput {
-  name: String
-  email: String
-  _id: MongoID
-  updatedAt: Date
-  createdAt: Date
-  _ids: [MongoID]
+"""List of items with pagination."""
+type UserPagination {
+  """Total object count."""
+  count: Int
 
-  """
-  List of *indexed* fields that can be filtered via operators.
-  """
-  _operators: OperatorsFilterUserInput
-  OR: [FilterUserInput!]
-  AND: [FilterUserInput!]
+  """Array of objects."""
+  items: [User!]
+
+  """Information to aid in pagination."""
+  pageInfo: PaginationInfo!
 }
 
-"""
-The `ID` scalar type represents a unique MongoDB identifier in collection.
-MongoDB by default use 12-byte ObjectId value
-(https://docs.mongodb.com/manual/reference/bson-types/#objectid). But MongoDB
-also may accepts string or integer as correct values for _id field.
-"""
-scalar MongoID
+type PaginationInfo {
+  currentPage: Int!
+  perPage: Int!
+  pageCount: Int
+  itemCount: Int
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+}
 
 type Mutation {
   """
@@ -385,38 +330,29 @@ type Mutation {
   userCreateMany(records: [CreateManyUserInput!]!): CreateManyUserPayload
 
   """
-  Update one document: 1) Retrieve one document by findById. 2) Apply updates to
-  mongoose document. 3) Mongoose applies defaults, setters, hooks and
-  validation. 4) And save it.
+  Update one document: 1) Retrieve one document by findById. 2) Apply updates to mongoose document. 3) Mongoose applies defaults, setters, hooks and validation. 4) And save it.
   """
   userUpdateById(record: UpdateByIdUserInput!): UpdateByIdUserPayload
 
   """
-  Update one document: 1) Retrieve one document via findOne. 2) Apply updates to
-  mongoose document. 3) Mongoose applies defaults, setters, hooks and
-  validation. 4) And save it.
+  Update one document: 1) Retrieve one document via findOne. 2) Apply updates to mongoose document. 3) Mongoose applies defaults, setters, hooks and validation. 4) And save it.
   """
   userUpdateOne(
     record: UpdateOneUserInput!
 
-    """
-    Filter by fields
-    """
+    """Filter by fields"""
     filter: FilterUpdateOneUserInput
     sort: SortUpdateOneUserInput
     skip: Int
   ): UpdateOneUserPayload
 
   """
-  Update many documents without returning them: Use Query.update mongoose
-  method. Do not apply mongoose defaults, setters, hooks and validation.
+  Update many documents without returning them: Use Query.update mongoose method. Do not apply mongoose defaults, setters, hooks and validation. 
   """
   userUpdateMany(
     record: UpdateManyUserInput!
 
-    """
-    Filter by fields
-    """
+    """Filter by fields"""
     filter: FilterUpdateManyUserInput
     sort: SortUpdateManyUserInput
     skip: Int
@@ -432,289 +368,138 @@ type Mutation {
   Remove one document: 1) Remove with hooks via findOneAndRemove. 2) Return removed document.
   """
   userRemoveOne(
-    """
-    Filter by fields
-    """
+    """Filter by fields"""
     filter: FilterRemoveOneUserInput
     sort: SortRemoveOneUserInput
   ): RemoveOneUserPayload
 
   """
-  Remove many documents without returning them: Use Query.remove mongoose
-  method. Do not apply mongoose defaults, setters, hooks and validation.
+  Remove many documents without returning them: Use Query.remove mongoose method. Do not apply mongoose defaults, setters, hooks and validation. 
   """
   userRemoveMany(
-    """
-    Filter by fields
-    """
+    """Filter by fields"""
     filter: FilterRemoveManyUserInput!
   ): RemoveManyUserPayload
 }
 
-"""
-For performance reason this type contains only *indexed* fields.
-"""
-input OperatorsFilterFindManyUserInput {
-  email: EmailOperatorsFilterFindManyUserInput
-  _id: _idOperatorsFilterFindManyUserInput
-  createdAt: CreatedAtOperatorsFilterFindManyUserInput
+type CreateOneUserPayload {
+  """Created document ID"""
+  recordId: MongoID
+
+  """Created document"""
+  record: User
 }
 
-"""
-For performance reason this type contains only *indexed* fields.
-"""
-input OperatorsFilterFindOneUserInput {
-  email: EmailOperatorsFilterFindOneUserInput
-  _id: _idOperatorsFilterFindOneUserInput
-  createdAt: CreatedAtOperatorsFilterFindOneUserInput
+""""""
+input CreateOneUserInput {
+  name: String!
+  email: String!
+  updatedAt: Date
+  createdAt: Date
 }
 
-"""
-For performance reason this type contains only *indexed* fields.
-"""
-input OperatorsFilterRemoveManyUserInput {
-  email: EmailOperatorsFilterRemoveManyUserInput
-  _id: _idOperatorsFilterRemoveManyUserInput
-  createdAt: CreatedAtOperatorsFilterRemoveManyUserInput
+type CreateManyUserPayload {
+  """Created document ID"""
+  recordIds: [MongoID!]!
+
+  """Created documents"""
+  records: [User!]!
+
+  """Count of all documents created"""
+  createCount: Int!
 }
 
-"""
-For performance reason this type contains only *indexed* fields.
-"""
-input OperatorsFilterRemoveOneUserInput {
-  email: EmailOperatorsFilterRemoveOneUserInput
-  _id: _idOperatorsFilterRemoveOneUserInput
-  createdAt: CreatedAtOperatorsFilterRemoveOneUserInput
+""""""
+input CreateManyUserInput {
+  name: String!
+  email: String!
+  updatedAt: Date
+  createdAt: Date
 }
 
-"""
-For performance reason this type contains only *indexed* fields.
-"""
-input OperatorsFilterUpdateManyUserInput {
-  email: EmailOperatorsFilterUpdateManyUserInput
-  _id: _idOperatorsFilterUpdateManyUserInput
-  createdAt: CreatedAtOperatorsFilterUpdateManyUserInput
+type UpdateByIdUserPayload {
+  """Updated document ID"""
+  recordId: MongoID
+
+  """Updated document"""
+  record: User
 }
 
-"""
-For performance reason this type contains only *indexed* fields.
-"""
+""""""
+input UpdateByIdUserInput {
+  name: String
+  email: String
+  _id: MongoID!
+  updatedAt: Date
+  createdAt: Date
+}
+
+type UpdateOneUserPayload {
+  """Updated document ID"""
+  recordId: MongoID
+
+  """Updated document"""
+  record: User
+}
+
+""""""
+input UpdateOneUserInput {
+  name: String
+  email: String
+  updatedAt: Date
+  createdAt: Date
+}
+
+""""""
+input FilterUpdateOneUserInput {
+  name: String
+  email: String
+  _id: MongoID
+  updatedAt: Date
+  createdAt: Date
+  _ids: [MongoID]
+
+  """List of *indexed* fields that can be filtered via operators."""
+  _operators: OperatorsFilterUpdateOneUserInput
+  OR: [FilterUpdateOneUserInput!]
+  AND: [FilterUpdateOneUserInput!]
+}
+
+"""For performance reason this type contains only *indexed* fields."""
 input OperatorsFilterUpdateOneUserInput {
   email: EmailOperatorsFilterUpdateOneUserInput
   _id: _idOperatorsFilterUpdateOneUserInput
   createdAt: CreatedAtOperatorsFilterUpdateOneUserInput
 }
 
-"""
-For performance reason this type contains only *indexed* fields.
-"""
-input OperatorsFilterUserInput {
-  email: EmailOperatorsFilterUserInput
-  _id: _idOperatorsFilterUserInput
-  createdAt: CreatedAtOperatorsFilterUserInput
+input EmailOperatorsFilterUpdateOneUserInput {
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  ne: String
+  in: [String]
+  nin: [String]
 }
 
-"""
-Information about pagination in a connection.
-"""
-type PageInfo {
-  """
-  When paginating forwards, are there more items?
-  """
-  hasNextPage: Boolean!
-
-  """
-  When paginating backwards, are there more items?
-  """
-  hasPreviousPage: Boolean!
-
-  """
-  When paginating backwards, the cursor to continue.
-  """
-  startCursor: String
-
-  """
-  When paginating forwards, the cursor to continue.
-  """
-  endCursor: String
+input _idOperatorsFilterUpdateOneUserInput {
+  gt: MongoID
+  gte: MongoID
+  lt: MongoID
+  lte: MongoID
+  ne: MongoID
+  in: [MongoID]
+  nin: [MongoID]
 }
 
-type PaginationInfo {
-  currentPage: Int!
-  perPage: Int!
-  pageCount: Int
-  itemCount: Int
-  hasNextPage: Boolean
-  hasPreviousPage: Boolean
-}
-
-type Query {
-  userById(_id: MongoID!): User
-  userByIds(
-    _ids: [MongoID]!
-    limit: Int = 1000
-    sort: SortFindByIdsUserInput
-  ): [User]
-  userOne(
-    """
-    Filter by fields
-    """
-    filter: FilterFindOneUserInput
-    skip: Int
-    sort: SortFindOneUserInput
-  ): User
-  userMany(
-    """
-    Filter by fields
-    """
-    filter: FilterFindManyUserInput
-    skip: Int
-    limit: Int = 1000
-    sort: SortFindManyUserInput
-  ): [User]
-  userCount(
-    """
-    Filter by fields
-    """
-    filter: FilterUserInput
-  ): Int
-  userConnection(
-    """
-    Forward pagination argument for returning at most first edges
-    """
-    first: Int
-
-    """
-    Forward pagination argument for returning at most first edges
-    """
-    after: String
-
-    """
-    Backward pagination argument for returning at most last edges
-    """
-    last: Int
-
-    """
-    Backward pagination argument for returning at most last edges
-    """
-    before: String
-
-    """
-    Filter by fields
-    """
-    filter: FilterFindManyUserInput
-
-    """
-    Sort argument for data ordering
-    """
-    sort: SortConnectionUserEnum = _ID_DESC
-  ): UserConnection
-  userPagination(
-    """
-    Page number for displaying
-    """
-    page: Int
-    perPage: Int = 20
-
-    """
-    Filter by fields
-    """
-    filter: FilterFindManyUserInput
-    sort: SortFindManyUserInput
-  ): UserPagination
-}
-
-type RemoveByIdUserPayload {
-  """
-  Removed document ID
-  """
-  recordId: MongoID
-
-  """
-  Removed document
-  """
-  record: User
-}
-
-type RemoveManyUserPayload {
-  """
-  Affected documents number
-  """
-  numAffected: Int
-}
-
-type RemoveOneUserPayload {
-  """
-  Removed document ID
-  """
-  recordId: MongoID
-
-  """
-  Removed document
-  """
-  record: User
-}
-
-enum SortConnectionUserEnum {
-  _ID_DESC
-  _ID_ASC
-  EMAIL_DESC
-  EMAIL_ASC
-}
-
-enum SortFindByIdsUserInput {
-  _ID_ASC
-  _ID_DESC
-  EMAIL_ASC
-  EMAIL_DESC
-  CREATEDAT_ASC
-  CREATEDAT_DESC
-  CREATEDAT__UPDATEDAT_ASC
-  CREATEDAT__UPDATEDAT_DESC
-}
-
-enum SortFindManyUserInput {
-  _ID_ASC
-  _ID_DESC
-  EMAIL_ASC
-  EMAIL_DESC
-  CREATEDAT_ASC
-  CREATEDAT_DESC
-  CREATEDAT__UPDATEDAT_ASC
-  CREATEDAT__UPDATEDAT_DESC
-}
-
-enum SortFindOneUserInput {
-  _ID_ASC
-  _ID_DESC
-  EMAIL_ASC
-  EMAIL_DESC
-  CREATEDAT_ASC
-  CREATEDAT_DESC
-  CREATEDAT__UPDATEDAT_ASC
-  CREATEDAT__UPDATEDAT_DESC
-}
-
-enum SortRemoveOneUserInput {
-  _ID_ASC
-  _ID_DESC
-  EMAIL_ASC
-  EMAIL_DESC
-  CREATEDAT_ASC
-  CREATEDAT_DESC
-  CREATEDAT__UPDATEDAT_ASC
-  CREATEDAT__UPDATEDAT_DESC
-}
-
-enum SortUpdateManyUserInput {
-  _ID_ASC
-  _ID_DESC
-  EMAIL_ASC
-  EMAIL_DESC
-  CREATEDAT_ASC
-  CREATEDAT_DESC
-  CREATEDAT__UPDATEDAT_ASC
-  CREATEDAT__UPDATEDAT_DESC
+input CreatedAtOperatorsFilterUpdateOneUserInput {
+  gt: Date
+  gte: Date
+  lt: Date
+  lte: Date
+  ne: Date
+  in: [Date]
+  nin: [Date]
 }
 
 enum SortUpdateOneUserInput {
@@ -728,26 +513,12 @@ enum SortUpdateOneUserInput {
   CREATEDAT__UPDATEDAT_DESC
 }
 
-input UpdateByIdUserInput {
-  name: String
-  email: String
-  _id: MongoID!
-  updatedAt: Date
-  createdAt: Date
+type UpdateManyUserPayload {
+  """Affected documents number"""
+  numAffected: Int
 }
 
-type UpdateByIdUserPayload {
-  """
-  Updated document ID
-  """
-  recordId: MongoID
-
-  """
-  Updated document
-  """
-  record: User
-}
-
+""""""
 input UpdateManyUserInput {
   name: String
   email: String
@@ -755,91 +526,201 @@ input UpdateManyUserInput {
   createdAt: Date
 }
 
-type UpdateManyUserPayload {
-  """
-  Affected documents number
-  """
-  numAffected: Int
-}
-
-input UpdateOneUserInput {
+""""""
+input FilterUpdateManyUserInput {
   name: String
   email: String
+  _id: MongoID
   updatedAt: Date
   createdAt: Date
+  _ids: [MongoID]
+
+  """List of *indexed* fields that can be filtered via operators."""
+  _operators: OperatorsFilterUpdateManyUserInput
+  OR: [FilterUpdateManyUserInput!]
+  AND: [FilterUpdateManyUserInput!]
 }
 
-type UpdateOneUserPayload {
-  """
-  Updated document ID
-  """
+"""For performance reason this type contains only *indexed* fields."""
+input OperatorsFilterUpdateManyUserInput {
+  email: EmailOperatorsFilterUpdateManyUserInput
+  _id: _idOperatorsFilterUpdateManyUserInput
+  createdAt: CreatedAtOperatorsFilterUpdateManyUserInput
+}
+
+input EmailOperatorsFilterUpdateManyUserInput {
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  ne: String
+  in: [String]
+  nin: [String]
+}
+
+input _idOperatorsFilterUpdateManyUserInput {
+  gt: MongoID
+  gte: MongoID
+  lt: MongoID
+  lte: MongoID
+  ne: MongoID
+  in: [MongoID]
+  nin: [MongoID]
+}
+
+input CreatedAtOperatorsFilterUpdateManyUserInput {
+  gt: Date
+  gte: Date
+  lt: Date
+  lte: Date
+  ne: Date
+  in: [Date]
+  nin: [Date]
+}
+
+enum SortUpdateManyUserInput {
+  _ID_ASC
+  _ID_DESC
+  EMAIL_ASC
+  EMAIL_DESC
+  CREATEDAT_ASC
+  CREATEDAT_DESC
+  CREATEDAT__UPDATEDAT_ASC
+  CREATEDAT__UPDATEDAT_DESC
+}
+
+type RemoveByIdUserPayload {
+  """Removed document ID"""
   recordId: MongoID
 
-  """
-  Updated document
-  """
+  """Removed document"""
   record: User
 }
 
-type User {
+type RemoveOneUserPayload {
+  """Removed document ID"""
+  recordId: MongoID
+
+  """Removed document"""
+  record: User
+}
+
+""""""
+input FilterRemoveOneUserInput {
   name: String
   email: String
-  _id: MongoID!
+  _id: MongoID
   updatedAt: Date
   createdAt: Date
+  _ids: [MongoID]
+
+  """List of *indexed* fields that can be filtered via operators."""
+  _operators: OperatorsFilterRemoveOneUserInput
+  OR: [FilterRemoveOneUserInput!]
+  AND: [FilterRemoveOneUserInput!]
 }
 
-"""
-A connection to a list of items.
-"""
-type UserConnection {
-  """
-  Total object count.
-  """
-  count: Int!
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-
-  """
-  Information to aid in pagination.
-  """
-  edges: [UserEdge!]!
+"""For performance reason this type contains only *indexed* fields."""
+input OperatorsFilterRemoveOneUserInput {
+  email: EmailOperatorsFilterRemoveOneUserInput
+  _id: _idOperatorsFilterRemoveOneUserInput
+  createdAt: CreatedAtOperatorsFilterRemoveOneUserInput
 }
 
-"""
-An edge in a connection.
-"""
-type UserEdge {
-  """
-  The item at the end of the edge
-  """
-  node: User!
-
-  """
-  A cursor for use in pagination
-  """
-  cursor: String!
+input EmailOperatorsFilterRemoveOneUserInput {
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  ne: String
+  in: [String]
+  nin: [String]
 }
 
-"""
-List of items with pagination.
-"""
-type UserPagination {
-  """
-  Total object count.
-  """
-  count: Int
+input _idOperatorsFilterRemoveOneUserInput {
+  gt: MongoID
+  gte: MongoID
+  lt: MongoID
+  lte: MongoID
+  ne: MongoID
+  in: [MongoID]
+  nin: [MongoID]
+}
 
-  """
-  Array of objects.
-  """
-  items: [User]
+input CreatedAtOperatorsFilterRemoveOneUserInput {
+  gt: Date
+  gte: Date
+  lt: Date
+  lte: Date
+  ne: Date
+  in: [Date]
+  nin: [Date]
+}
 
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PaginationInfo!
+enum SortRemoveOneUserInput {
+  _ID_ASC
+  _ID_DESC
+  EMAIL_ASC
+  EMAIL_DESC
+  CREATEDAT_ASC
+  CREATEDAT_DESC
+  CREATEDAT__UPDATEDAT_ASC
+  CREATEDAT__UPDATEDAT_DESC
+}
+
+type RemoveManyUserPayload {
+  """Affected documents number"""
+  numAffected: Int
+}
+
+""""""
+input FilterRemoveManyUserInput {
+  name: String
+  email: String
+  _id: MongoID
+  updatedAt: Date
+  createdAt: Date
+  _ids: [MongoID]
+
+  """List of *indexed* fields that can be filtered via operators."""
+  _operators: OperatorsFilterRemoveManyUserInput
+  OR: [FilterRemoveManyUserInput!]
+  AND: [FilterRemoveManyUserInput!]
+}
+
+"""For performance reason this type contains only *indexed* fields."""
+input OperatorsFilterRemoveManyUserInput {
+  email: EmailOperatorsFilterRemoveManyUserInput
+  _id: _idOperatorsFilterRemoveManyUserInput
+  createdAt: CreatedAtOperatorsFilterRemoveManyUserInput
+}
+
+input EmailOperatorsFilterRemoveManyUserInput {
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  ne: String
+  in: [String]
+  nin: [String]
+}
+
+input _idOperatorsFilterRemoveManyUserInput {
+  gt: MongoID
+  gte: MongoID
+  lt: MongoID
+  lte: MongoID
+  ne: MongoID
+  in: [MongoID]
+  nin: [MongoID]
+}
+
+input CreatedAtOperatorsFilterRemoveManyUserInput {
+  gt: Date
+  gte: Date
+  lt: Date
+  lte: Date
+  ne: Date
+  in: [Date]
+  nin: [Date]
 }

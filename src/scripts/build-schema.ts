@@ -1,6 +1,5 @@
 import fs from 'fs-extra';
-import { graphql } from 'graphql';
-import { introspectionQuery, printSchema } from 'graphql/utilities';
+import { getIntrospectionQuery, graphql, printSchema } from 'graphql';
 import path from 'path';
 import Schema from '../schema';
 
@@ -10,7 +9,7 @@ async function buildSchema() {
 
   fs.writeFileSync(
     path.join(__dirname, '../data/schema.graphql.json'),
-    JSON.stringify(await graphql(Schema, introspectionQuery), null, 2),
+    JSON.stringify(await graphql(Schema, getIntrospectionQuery()), null, 2),
   );
 
   fs.writeFileSync(
